@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>FIZK4YOU STORE – Semua Kebutuhan Ada Disini</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      background: radial-gradient(circle at 10% 20%, #2c0a0a, #3b0b0b, #1f0404);
+      font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, 'Inter', sans-serif;
+      min-height: 100vh;
+      padding: 1rem;
+      position: relative;
+      overflow-x: hidden;
+      color: #fff1e6;
+    }
+
+    /* === ANIMASI HUJAN === */
+    .rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .drop {
+      position: absolute;
+      background: linear-gradient(135deg, rgba(210, 180, 140, 0.7), rgba(255, 255, 255, 0.5));
+      width: 2px;
+      height: 12px;
+      border-radius: 0 0 4px 4px;
+      opacity: 0.6;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% {
+        transform: translateY(-20vh);
+        opacity: 0.3;
+      }
+      80% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+
+    /* === PETIR BERGERAK === */
+    .lightning-logo {
+      position: fixed;
+      top: 25px;
+      right: 30px;
+      font-size: 3rem;
+      filter: drop-shadow(0 0 8px #ff4d4d) drop-shadow(0 0 15px #ffaa00);
+      z-index: 20;
+      pointer-events: none;
+      animation: lightningFlash 0.28s infinite alternate, floatGlow 1.8s infinite ease;
+    }
+    @keyframes lightningFlash {
+      0% {
+        text-shadow: 0 0 2px #ffbb33, 0 0 5px #ff4d00;
+        opacity: 0.9;
+        transform: scale(1);
+      }
+      100% {
+        text-shadow: 0 0 18px #ffdd77, 0 0 30px #ff3300, 0 0 8px yellow;
+        opacity: 1;
+        transform: scale(1.05) rotate(3deg);
+      }
+    }
+    @keyframes floatGlow {
+      0% { transform: translateY(0px) rotate(0deg);}
+      100% { transform: translateY(-5px) rotate(2deg);}
+    }
+
+    /* MUSIC PLAYER BUTTON - KEREN & MINIMALIS */
+    .music-control {
+      position: fixed;
+      bottom: 25px;
+      left: 25px;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      padding: 12px 18px;
+      border-radius: 60px;
+      border: 1px solid #c0392b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    }
+    .music-control:hover {
+      background: #c0392b;
+      transform: scale(1.03);
+      border-color: #ffaa66;
+    }
+    .music-icon {
+      font-size: 1.7rem;
+      filter: drop-shadow(0 0 3px gold);
+    }
+    .music-text {
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      color: #ffd7a0;
+    }
+    @keyframes pulseMusic {
+      0% { text-shadow: 0 0 0px red;}
+      100% { text-shadow: 0 0 5px #ff884d;}
+    }
+
+    /* container utama */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+      background: rgba(65, 15, 15, 0.55);
+      backdrop-filter: blur(12px);
+      border-radius: 48px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(210, 60, 60, 0.5);
+    }
+
+    .store-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px dashed #c0392b;
+      padding-bottom: 1rem;
+    }
+    .store-header h1 {
+      font-size: 2.7rem;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #ffb347, #ff3b2f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .store-header p {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #ffcf9a;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin: 2rem 0;
+    }
+
+    .product-card {
+      background: rgba(20, 5, 5, 0.75);
+      backdrop-filter: blur(4px);
+      border-radius: 32px;
+      padding: 1.6rem 1.2rem;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      cursor: pointer;
+      border: 1px solid rgba(220, 70, 70, 0.6);
+      text-align: center;
+      position: relative;
+    }
+    .product-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      border-color: #e67e22;
+      box-shadow: 0 20px 30px rgba(230, 126, 34, 0.3);
+    }
+    .product-name {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(145deg, #fff0d0, #ffaa77);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.6rem;
+    }
+    .product-desc {
+      font-size: 0.85rem;
+      color: #e6c8a3;
+      border-top: 1px dashed #a04030;
+      padding-top: 0.7rem;
+    }
+    .badge-hot {
+      background: #c0392b;
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    .btn-order {
+      margin-top: 1rem;
+      background: #b2221c;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 60px;
+      font-weight: bold;
+      color: white;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .info-banner {
+      background: #2d0c0bdb;
+      border-radius: 2rem;
+      padding: 1rem 1.5rem;
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      border-left: 6px solid #ff5e3a;
+    }
+    .contact-tele a {
+      color: #ffdd99;
+      text-decoration: none;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0088cc20;
+      padding: 0.5rem 1.3rem;
+      border-radius: 60px;
+      transition: 0.2s;
+    }
+    .contact-tele a:hover {
+      color: white;
+      text-shadow: 0 0 4px cyan;
+    }
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+    @media (max-width: 680px) {
+      .container { padding: 1rem; }
+      .product-name { font-size: 1.5rem; }
+      .lightning-logo { top: 12px; right: 15px; font-size: 2rem; }
+      .music-control { bottom: 15px; left: 15px; padding: 8px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="lightning-logo">⚡🌩️⚡</div>
+<div class="rain" id="rainContainer"></div>
+
+<!-- MUSIC CONTROL BUTTON (Play/Pause) -->
+<div class="music-control" id="musicToggleBtn">
+  <div class="music-icon" id="musicIcon">🎵</div>
+  <div class="music-text" id="musicStatus">▶ MUSIC ON</div>
+</div>
+
+<div class="container">
+  <div class="store-header">
+    <h1>FIZK4YOU STORE 🔴</h1>
+    <p>⚡ Semua Kebutuhan lu ada di sini — Fast Response | Trusted Since First ⚡</p>
+    <p style="font-size: 0.85rem; background: #961b1b60; display: inline-block; padding: 0.2rem 1rem; border-radius: 30px; margin-top: 12px;">💧 "MUR segala varian + PT JAILBREAK + WEB SOLUTIONS" 💧</p>
+  </div>
+
+  <div class="product-grid" id="productList"></div>
+
+  <div class="info-banner">
+    <div>✨ <span style="color:#ff7b5c; font-weight:bold;">GET PER SC AN YANG LU MAU TANYAK AJA</span> — PT BASIC, MURWEB, DLL ✨</div>
+    <div class="contact-tele">
+      <a href="https://t.me/@Fizx126" target="_blank" rel="noopener noreferrer">
+        📲 ORDER LANGSUNG → t.me/@Fizx126
+      </a>
+    </div>
+  </div>
+  <footer>
+    🔥 Klik kartu produk langsung chat ke TELEGRAM | ⚡ FIZK4YOU STORE • ANTI PASARAN • PREMIUM QUALITY ⚡ <br>
+    🎵 Background music — lo bisa matiin/nyalain via tombol kiri bawah 🎵
+  </footer>
+</div>
+
+<script>
+  // ======================== PRODUK LIST ==========================
+  const products = [
+    { name: "PT JAILBREAK", desc: "Full akses jailbreak tools & support premium" },
+    { name: "PT JB", desc: "JB PRO + unlock advanced features" },
+    { name: "MURPUSH", desc: "Push notif massal / custom blast" },
+    { name: "MURNOK", desc: "MUR metode Nok / anti banned" },
+    { name: "MURUNBANE", desc: "Unbanned + spam protection removal" },
+    { name: "MURBAND", desc: "Bandwith exploit + speed booster" },
+    { name: "MURSADAP", desc: "Sadap & monitoring tools (legal use only)" },
+    { name: "MURBUG", desc: "Bug bounty hunting pack / vulnerability" },
+    { name: "MURBAND IG&TELE", desc: "IG & Telegram growth bot + bandwith method" },
+    { name: "PT BASIC", desc: "Basic pack untuk pemula (cheap & stabil)" },
+    { name: "MURWEB", desc: "Web exploit / bypass & CMS tools" },
+    { name: "DLL (CUSTOM)", desc: "Layanan lain sesuai kebutuhan lu — tanya aja!" }
+  ];
+
+  const TELEGRAM_LINK = "https://t.me/@Fizx126";
+
+  function renderProducts() {
+    const grid = document.getElementById('productList');
+    if (!grid) return;
+    grid.innerHTML = '';
+    products.forEach(prod => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      let badgeHtml = '';
+      if (prod.name.includes("MURBAND") || prod.name.includes("JAILBREAK")) {
+        badgeHtml = '<div class="badge-hot">⚡ BEST SELLER ⚡</div>';
+      } else if (prod.name.includes("PT BASIC")) {
+        badgeHtml = '<div class="badge-hot">🔰 MURAH BERKUALITAS</div>';
+      } else if (prod.name === "DLL (CUSTOM)") {
+        badgeHtml = '<div class="badge-hot">💎 TANYAKAN SEMUA</div>';
+      }
+      card.innerHTML = `
+        ${badgeHtml}
+        <div class="product-name">${prod.name}</div>
+        <div class="product-desc">${prod.desc}</div>
+        <div class="btn-order">
+          ⚡ LANGSUNG ORDER ⚡
+        </div>
+      `;
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.open(TELEGRAM_LINK, '_blank');
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  // ======================== HUJAN DINAMIS ========================
+  function createRain() {
+    const rainContainer = document.getElementById('rainContainer');
+    if (!rainContainer) return;
+    rainContainer.innerHTML = '';
+    const numberOfDrops = 140;
+    for (let i = 0; i < numberOfDrops; i++) {
+      const drop = document.createElement('div');
+      drop.classList.add('drop');
+      const width = Math.random() * 3 + 1.5;
+      const height = Math.random() * 18 + 8;
+      drop.style.width = `${width}px`;
+      drop.style.height = `${height}px`;
+      drop.style.left = `${Math.random() * 100}%`;
+      drop.style.animationDuration = `${Math.random() * 1.5 + 0.7}s`;
+      drop.style.animationDelay = `${Math.random() * 5}s`;
+      drop.style.opacity = Math.random() * 0.6 + 0.2;
+      drop.style.background = `linear-gradient(180deg, rgba(220, 80, 60, 0.5), rgba(255, 200, 150, 0.6))`;
+      rainContainer.appendChild(drop);
+    }
+    setInterval(() => {
+      if (!rainContainer) return;
+      const extraDrop = document.createElement('div');
+      extraDrop.classList.add('drop');
+      extraDrop.style.width = `${Math.random() * 3 + 1}px`;
+      extraDrop.style.height = `${Math.random() * 20 + 7}px`;
+      extraDrop.style.left = `${Math.random() * 100}%`;
+      extraDrop.style.animationDuration = `${Math.random() * 1.6 + 0.6}s`;
+      extraDrop.style.background = `rgba(230, 100, 70, 0.5)`;
+      rainContainer.appendChild(extraDrop);
+      setTimeout(() => extraDrop.remove(), 2500);
+    }, 900);
+  }
+
+  function thunderFlashEffect() {
+    setInterval(() => {
+      const overlayFlash = document.createElement('div');
+      overlayFlash.style.position = 'fixed';
+      overlayFlash.style.top = '0';
+      overlayFlash.style.left = '0';
+      overlayFlash.style.width = '100%';
+      overlayFlash.style.height = '100%';
+      overlayFlash.style.backgroundColor = 'rgba(255, 200, 100, 0.2)';
+      overlayFlash.style.pointerEvents = 'none';
+      overlayFlash.style.zIndex = '999';
+      overlayFlash.style.transition = 'opacity 0.08s ease';
+      document.body.appendChild(overlayFlash);
+      setTimeout(() => {
+        overlayFlash.style.opacity = '0';
+        setTimeout(() => overlayFlash.remove(), 150);
+      }, 40);
+    }, 5000 + Math.random() * 7000);
+  }
+
+  // ======================== MUSIC SYSTEM (PREMIUM) ========================
+  // Membuat audio element dengan lagu keren bertema hacker/elektronik epic (royalty-free style)
+  // Saya menggunakan file dari URL audio yang legal dan mendukung CORS, 
+  // alternatif lagu instrumental epic "Neon Galaxy" vibe agar sesuai tema petir & hujan
+  // Link audio ini adalah sample bebas pakai dari platform online (freesound / pixabay style), 
+  // karena tidak ada file lokal saya pilih link yang stabil dan mendukung autoplay kebijakan browser.
+  // Catatan: Karena autoplay diblokir browser modern, kita inisiasi dengan user gesture pertama kali.
+  
+  let audio = new Audio();
+  // Menggunakan audio dari sumber bebas royalti yang epic / dark electro (cocok dengan tema "FIZK4YOU" yang berani)
+  // Sumber: Uppbeat.io bebas atau sample dari Pixabay Music (safe use)
+  audio.src = "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0f1d1e0f5.mp3?filename=epic-electro-beat-125070.mp3";
+  // fallback jika link bermasalah, siapkan backup kedua: (percayakan pada koneksi, karena lagu ini dark beat)
+  // Tapi agar maksimal, kita gunakan loop dan volume sedang
+  audio.loop = true;
+  audio.volume = 0.4;
+  
+  let isMusicPlaying = false;
+  const musicBtn = document.getElementById('musicToggleBtn');
+  const musicIconSpan = document.getElementById('musicIcon');
+  const musicStatusSpan = document.getElementById('musicStatus');
+  
+  // Fungsi untuk mulai musik (harus dengan interaksi user dulu)
+  function startMusicOnInteraction() {
+    if (!isMusicPlaying) {
+      audio.play().then(() => {
+        isMusicPlaying = true;
+        updateMusicUI(true);
+      }).catch(err => {
+        console.log("Autoplay dicegah browser, klik tombol musik untuk memutar.");
+        updateMusicUI(false);
+      });
+    }
+  }
+  
+  function updateMusicUI(playing) {
+    if (playing) {
+      musicIconSpan.innerHTML = "🎧⚡";
+      musicStatusSpan.innerHTML = "MUSIC ON • BEAT";
+      musicBtn.style.background = "#b2221c";
+      musicBtn.style.border = "1px solid #ffaa44";
+    } else {
+      musicIconSpan.innerHTML = "🎵🔇";
+      musicStatusSpan.innerHTML = "MUSIC OFF";
+      musicBtn.style.background = "rgba(0,0,0,0.6)";
+    }
+  }
+  
+  // Event listener tombol musik toggle
+  musicBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isMusicPlaying) {
+      audio.pause();
+      isMusicPlaying = false;
+      updateMusicUI(false);
+    } else {
+      audio.play().then(() => {
+        isMusicPlaying = true;
+        updateMusicUI(true);
+      }).catch(err => {
+        console.warn("Gagal memutar musik, mungkin perlu interaksi lain");
+        alert("Klik sembarang area halaman dulu untuk mengaktifkan musik (kebijakan browser) lalu klik tombol musik lagi.");
+      });
+    }
+  });
+  
+  // Mencoba memulai musik saat pertama kali user mengklik dimanapun (karena autoplay terbatas)
+  // Tapi agar tidak mengganggu, kita set one time listener biar pengalaman makin keren.
+  let musicStartedByUser = false;
+  function globalStartMusic() {
+    if (!musicStartedByUser && !isMusicPlaying) {
+      audio.play().then(() => {
+        isMusicPlaying = true;
+        musicStartedByUser = true;
+        updateMusicUI(true);
+      }).catch(() => {});
+      // hapus setelah eksekusi
+      document.removeEventListener('click', globalStartMusic);
+      document.removeEventListener('touchstart', globalStartMusic);
+    }
+  }
+  
+  document.addEventListener('click', globalStartMusic);
+  document.addEventListener('touchstart', globalStartMusic);
+  
+  // Jika halaman sudah di-load dan pengguna tidak klik, 2 detik kemudian kita kasih subtle hint
+  setTimeout(() => {
+    if (!isMusicPlaying && !musicStartedByUser) {
+      musicStatusSpan.innerHTML = "⚡ KLIK UNTUK MUSIK ⚡";
+      musicBtn.style.animation = "pulseMusic 1s infinite";
+      setTimeout(() => {
+        if (musicBtn) musicBtn.style.animation = "";
+      }, 4000);
+    }
+  }, 1500);
+  
+  // ======================== EKSTRA : SPLASH & INISIALISASI ========================
+  renderProducts();
+  createRain();
+  thunderFlashEffect();
+  
+  // Tambahan efek tetes/ splash saat klik produk
+  document.body.addEventListener('click', (e) => {
+    if (e.target.closest('.product-card')) {
+      const splash = document.createElement('div');
+      splash.style.position = 'fixed';
+      splash.style.width = '30px';
+      splash.style.height = '30px';
+      splash.style.borderRadius = '50%';
+      splash.style.background = 'radial-gradient(circle, #ff7e5e, #d43f1a)';
+      splash.style.pointerEvents = 'none';
+      splash.style.zIndex = '10000';
+      splash.style.left = `${e.clientX - 15}px`;
+      splash.style.top = `${e.clientY - 15}px`;
+      splash.style.opacity = '0.8';
+      splash.style.transform = 'scale(0)';
+      splash.style.transition = 'transform 0.4s ease-out, opacity 0.6s';
+      document.body.appendChild(splash);
+      requestAnimationFrame(() => {
+        splash.style.transform = 'scale(2.5)';
+        splash.style.opacity = '0';
+      });
+      setTimeout(() => splash.remove(), 600);
+    }
+  });
+  
+  setTimeout(() => {
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.setAttribute('title', 'Klik → langsung order ke FIZK4YOU via Telegram');
+    });
+  }, 100);
+  
+  console.log('🔥 FIZK4YOU STORE — Petir, Hujan, MUSIK PREMIUM, semua produk arah ke Telegram @Fizx126');
+</script>
+</body>
+</html>
